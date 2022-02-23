@@ -63,59 +63,59 @@ appBundleID_list = []
 os_list = []
 datetime_list = []
 count = 0
-for start in range(1, 101):
-    for msg in consumer:
-        data = msg.value
-        times = msg.timestamp
-        x = dumps(times, default=myconverter)
-        y = datetime.datetime.fromtimestamp(int(x) // 1000)
-        z = str(y)
-        res = json.loads(data)
-        b64_str = res["documentContent"][29:]
-        b64_str = b64_str.encode('utf-8')
-        b64_bytes = base64.b64decode(b64_str)
-        decode_str = b64_bytes.decode('utf-8')
-        d = ast.literal_eval(decode_str)
-        # print(d)
-        udid = d.get('UDID')
-        longitude = d.get('longitude')
-        speedValue = d.get('speedValue')
-        UserPushID = d.get('UserPushID')
-        latitude = d.get('latitude')
-        appBundleID = d.get('appBundleID')
-        # h3code = h3.geo_to_h3(latitude, longitude, 10)
-        os = d.get('os')
-        udid_list.append(udid)
-        UserPushID_list.append(UserPushID)
-        longitude_list.append(longitude)
-        latitude_list.append(latitude)
-        speedValue_list.append(speedValue)
-        os_list.append(os)
-        datetime_list.append(z)
-        appBundleID_list.append(appBundleID)
-        # print("m: ", m)
-        df = pd.DataFrame({'udid': udid_list, 'UserPushID': UserPushID_list, 'longitude': longitude_list,
-                           'latitude': latitude_list,
-                           'speedValue': speedValue_list, 'appBundleID': appBundleID_list,
-                           'os': os_list, 'datetime': datetime_list})
 
-        df.dropna()
-        try:
-            df["speedValue"] = abs(df["speedValue"])
-        except KeyError:
-            pass
-        df_p = df.T.to_dict('dict')
-        count += 1
-        # print("count: ", count)
-        if count == 10:
-            break
+for msg in consumer:
+    data = msg.value
+    times = msg.timestamp
+    x = dumps(times, default=myconverter)
+    y = datetime.datetime.fromtimestamp(int(x) // 1000)
+    z = str(y)
+    res = json.loads(data)
+    b64_str = res["documentContent"][29:]
+    b64_str = b64_str.encode('utf-8')
+    b64_bytes = base64.b64decode(b64_str)
+    decode_str = b64_bytes.decode('utf-8')
+    d = ast.literal_eval(decode_str)
+    # print(d)
+    udid = d.get('UDID')
+    longitude = d.get('longitude')
+    speedValue = d.get('speedValue')
+    UserPushID = d.get('UserPushID')
+    latitude = d.get('latitude')
+    appBundleID = d.get('appBundleID')
+    # h3code = h3.geo_to_h3(latitude, longitude, 10)
+    os = d.get('os')
+    udid_list.append(udid)
+    UserPushID_list.append(UserPushID)
+    longitude_list.append(longitude)
+    latitude_list.append(latitude)
+    speedValue_list.append(speedValue)
+    os_list.append(os)
+    datetime_list.append(z)
+    appBundleID_list.append(appBundleID)
+    # print("m: ", m)
+    df = pd.DataFrame({'udid': udid_list, 'UserPushID': UserPushID_list, 'longitude': longitude_list,
+                       'latitude': latitude_list,
+                       'speedValue': speedValue_list, 'appBundleID': appBundleID_list,
+                       'os': os_list, 'datetime': datetime_list})
+
+    df.dropna()
+    try:
+        df["speedValue"] = abs(df["speedValue"])
+    except KeyError:
+        pass
+    df_p = df.T.to_dict('dict')
+    count += 1
+    # print("count: ", count)
+    if count == 10:
+        break
     # print("abdulkerim")
 
 
-    @app.route('/api/v1/resources/cep-trafik/all', methods=['GET'])
-    def api_all():
-        return jsonify(df_p)
-    app.run()
+@app.route('/api/v1/resources/cep-trafik/all', methods=['GET'])
+def api_all():
+    return jsonify(df_p)
+# app.run()
 
 # A route to return all of the available entries in our catalog.
 
