@@ -26,7 +26,7 @@ app.config['JSON_AS_ASCII'] = False
 # px.set_mapbox_access_token(access_token)
 warnings.filterwarnings("ignore")
 
-consumer = KafkaConsumer('smartus_anonymous_data', bootstrap_servers='10.5.75.22:9092')
+consumer = KafkaConsumer('smartus_anonymous_data', bootstrap_servers='10.5.75.22:9092', api_version=(0, 10))
 # file = open('smartus16.json', 'w')
 res_dict = []
 
@@ -115,7 +115,7 @@ for start in range(1, 101):
     @app.route('/api/v1/resources/cep-trafik/all', methods=['GET'])
     def api_all():
         return jsonify(df_p)
-    # app.run()
+    app.run()
 
 # A route to return all of the available entries in our catalog.
 
