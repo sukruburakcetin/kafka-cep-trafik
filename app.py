@@ -109,7 +109,6 @@ for start in range(1, 101):
         print("count: ", count)
         if count == 10*start:
             break
-    print("abdulkerim")
 
 
     @app.route('/api/v1/resources/cep-trafik/all', methods=['GET'])
